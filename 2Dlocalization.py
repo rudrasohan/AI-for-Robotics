@@ -1,19 +1,18 @@
-colors=[['green','green','green'],
-		['green','red','red'],
-		['green','green','green']]
+colors = [['R','G','G','R','R'],
+          ['R','R','G','R','R'],
+          ['R','R','G','G','R'],
+          ['R','R','R','R','R']]
+measurements = ['G','G','G','G','G']
+motions = [[0,0],[0,1],[1,0],[1,0],[0,1]]
 
-r,c =3,3
-p = [[0.1111111 for x in range(c)] for y in range(r)]
-	
-measurements=['red','red']
+r,c =4,5
+p = [[0.05 for x in range(c)] for y in range(r)]
 
-motions=[[0,0],[0,1]]
-
-sensor_right = 0.8
-p_move = 1.0
+sensor_right = 0.7
+p_move = 0.8
 
 def sense(p,Z):
-	r,c =3,3
+	r,c =4,5
 	q = [[0 for x in range(c)] for y in range(r)]
 	s = 0.0
 	for i in range(r):
@@ -25,19 +24,20 @@ def sense(p,Z):
 		for j in range(c):
 			q[i][j] = q[i][j]/s
 	return q
-	
+
 def move(p,U):
-	r,c =3,3
+	r,c =4,5
 	q = [[0 for x in range(c)] for y in range(r)]
 	for i in range(r):
 		for j in range(c):
-			q[i][j] = p[(i-U[0])%3][(j-U[1])%3]
+			q[i][j] = p_move*p[(i-U[0])%4][(j-U[1])%5] + p[i][j]*(1-p_move)
 	return q
 
-p = move(p,motions[0])
-p = sense(p,measurements[0])
-p = move(p,motions[1])
-p = sense(p,measurements[1])
+for i in range(len(motions)):   
+    p = move(p,motions[i])
+    p = sense(p,measurements[i])
+    
 print p[0]
 print p[1]
 print p[2]
+print p[3]
