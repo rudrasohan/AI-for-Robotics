@@ -15,13 +15,14 @@
 #   0 = Navigable space
 #   1 = Occupied space
 
-grid = [[0, 0, 1, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0],
-        [0, 0, 1, 0, 1, 0],
-        [0, 0, 1, 1, 1, 0],
-        [0, 0, 1, 0, 1, 0]]
-init = [0, 0]
-goal = [len(grid)-1, len(grid[0])-1]
+grid = [[1, 1, 1, 0, 0, 0],
+        [1, 1, 1, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 0, 1, 1],
+        [1, 1, 1, 0, 1, 1]]
+#goal = [len(grid)-1, len(grid[0])-1]
+init = [4,3]
+goal = [2,0]
 cost = 1
 
 delta = [[-1, 0], # go up
@@ -33,10 +34,13 @@ delta_name = ['^', '<', 'v', '>']
 
 def search(grid,init,goal,cost):
 	path = []
+	c = 0
 	count = 0
 	temp = [[0,init[0],init[1]]]
 	t = init
 	grid1 = grid
+	closed = [[00 for row in range(len(grid[0]))] for col in range(len(grid))]
+
 	grid1[init[0]][init[1]] = 1
 	FINAL = []
 	print delta
@@ -50,35 +54,36 @@ def search(grid,init,goal,cost):
 	
 		t = [temp[p][1],temp[p][2]]
 		count = temp[p][0] + cost
+		
 		del temp[p]
-		#print temp[p][0]
-		if (count == 5):
-			print t
+
+
 		for i in range(4):
 			k[0] = t[0] + delta[i][0]
 			k[1] = t[1] + delta[i][1]
-			#print k
-			if (count == 5):
-				print k,delta[i],temp
-			if((k[0]>=0 and k[1]>=0) and (k[0]<5 and k[1]<6) and (grid[k[0]][k[1]] == 0) and (k[0]<=goal[0] and k[1]<=goal[1]) ):
+		
+			if((k[0]>=0 and k[1]>=0) and (k[0]<5 and k[1]<6) and (grid[k[0]][k[1]] == 0)):
 				temp.append([count,k[0],k[1]])
-				grid1[k[0]][k[1]] = 1
+				c += cost
+				grid1[k[0]][k[1]] = c
+				closed[k[0]][k[1]] = c
 		
 		print temp
-		print grid1[0]
-		print grid1[1]
-		print grid1[2]
-		print grid1[3]
-		print grid1[4]
-		if(len(temp) == 1):
-			FINAL = temp[0]
+		print closed[0]
+		print closed[1]
+		print closed[2]
+		print closed[3]
+		print closed[4]
 		if(len(temp) == 0):
 			break
-	if (FINAL[1] == goal[0] and FINAL[2] == goal[1]):
-		print "PASS"			
-		print FINAL
-	else :
+
+	if(closed[goal[0]][goal[1]] == 0):
 		print "FAIL"
+	else :
+		print "PASS"
 			
 
 search(grid,init,goal,cost)
+
+
+
